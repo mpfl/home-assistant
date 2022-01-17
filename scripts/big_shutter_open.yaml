@@ -1,0 +1,6 @@
+alias: "Big shutter open"
+sequence:
+- service: remote.send_command
+  data:
+    entity_id: remote.bedroom
+    command: !secret big_shutter_open 

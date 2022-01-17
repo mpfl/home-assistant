@@ -1,0 +1,9 @@
+alias: "Scene: Salon dawn"
+sequence:
+- service: cover.open_cover
+  data:
+    entity_id: cover.big_window
+- service: light.turn_off
+  data:
+    entity_id: light.barsony_lamp
+    transition: 60

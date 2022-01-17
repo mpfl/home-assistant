@@ -1,0 +1,6 @@
+alias: "Enact: HVAC off"
+sequence:
+- service: climate.turn_off
+  entity_id: all
+- service: timer.start
+  entity_id: timer.hvac_safety

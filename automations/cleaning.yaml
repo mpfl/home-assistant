@@ -1,0 +1,22 @@
+# Cleaning
+
+- id: vacuuming 
+  alias: 'Vacuuming'
+  trigger:
+    platform: time
+    at: "08:00:00"
+
+  condition:    
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: vacuum.roomba
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.mode_away
+        state: 'off'
+
+  action:
+    service: vacuum.turn_on
+    data:
+      entity_id: vacuum.roomba

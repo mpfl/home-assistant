@@ -1,0 +1,8 @@
+# Binary sensors
+
+- platform: template
+  sensors:
+    spare_power:
+      friendly_name: "Spare power"
+      value_template: "{{ (((states('sensor.mean_available_power')|int) > 2500) and is_state('sensor.hvac_state','True')) or (((states('sensor.mean_available_power')|int) > 0) and is_state('sensor.hvac_state','False')) }}"
+

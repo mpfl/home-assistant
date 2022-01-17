@@ -1,0 +1,18 @@
+- name: Sonos
+  entities:
+    remote.home_theatre:
+      state: on
+      activity: "28578588"
+
+- name: Shield
+  entities:
+    remote.home_theatre:
+      state: on
+      activity: "29024069"
+
+- name: "XBox 360"
+  entities:
+    remote.home_theatre:
+      state: on
+      activity: "28578442"
+

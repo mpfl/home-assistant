@@ -1,0 +1,2 @@
+- platform: wake_on_lan
+  mac: 40:16:7E:A8:DD:7A

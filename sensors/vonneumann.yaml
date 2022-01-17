@@ -1,0 +1,96 @@
+- platform: rest
+  name: vonneumann_sensor
+  resource: "http://192.168.1.183:7125/printer/objects/query?heater_bed&extruder&print_stats&toolhead&display_status&virtual_sdcard"
+  json_attributes_path: "$.result.status"
+  json_attributes:
+    - heater_bed
+    - extruder
+    - print_stats
+    - toolhead
+    - display_status
+    - virtual_sdcard
+  value_template: 'OK'
+- platform: template
+  sensors:
+    vonneumann_hotend_target:
+      friendly_name: 'Hotend Target'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["extruder"]["target"]  | float | round(1) }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+      icon_template: mdi:thermometer
+    vonneumann_hotend_actual:
+      friendly_name: 'Hotend Actual'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["extruder"]["temperature"]  | float | round(1) }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+      icon_template: mdi:thermometer
+    vonneumann_bed_target:
+      friendly_name: 'Bed Target'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["heater_bed"]["target"]  | float | round(1) }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+      icon_template: mdi:thermometer
+    vonneumann_bed_actual:
+      friendly_name: 'Bed Actual'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["heater_bed"]["temperature"]  | float | round(1) }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+      icon_template: mdi:thermometer
+    vonneumann_state:
+      friendly_name: 'Printer State'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["print_stats"]["state"]}}'
+      icon_template: >
+        {% set val =  states.sensor.vonneumann_sensor.attributes["print_stats"]["state"]  %}
+        {% if val == 'standby' %}
+          mdi:sleep
+        {% elif val == 'error' %}
+          mdi:alert-circle
+        {% elif val == 'printing' %}
+          mdi:printer-3d-nozzle
+        {% elif val == 'paused' %}
+          mdi:pause-circle
+        {% elif val == 'complete' %}
+          mdi:printer-3d
+        {% else %}
+          mdi:help-circle
+        {% endif %}
+    vonneumann_current_print:
+      friendly_name: 'Current Print'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["print_stats"]["filename"]}}'
+    vonneumann_current_progress:
+      friendly_name: 'Progress'
+      value_template: '{{ ((states.sensor.vonneumann_sensor.attributes["display_status"]["progress"])*100) | round(0, "floor") }}'
+      unit_of_measurement: '%'
+      icon_template: mdi:progress-clock
+    vonneumann_print_time:
+      friendly_name: 'Time Elapsed'
+      value_template: '{{ states.sensor.vonneumann_sensor.attributes["print_stats"]["print_duration"] |timestamp_custom("%H:%M:%S", 0)}}'
+      icon_template: mdi:camera-timer
+    vonneumann_time_remaining:
+      friendly_name: 'Time Remaining'
+      value_template: '{{ (((states.sensor.vonneumann_sensor.attributes["print_stats"]["print_duration"]/states.sensor.vonneumann_sensor.attributes["display_status"]["progress"]- states.sensor.vonneumann_sensor.attributes["print_stats"]["print_duration"]) if states.sensor.vonneumann_sensor.attributes["display_status"]["progress"]>0 else 0)) | timestamp_custom("%H:%M:%S", 0)}}'
+      icon_template: mdi:timer-sand
+    vonneumann_eta:
+      friendly_name: 'ETA'
+      value_template: '{{ (as_timestamp(now())+2*60*60+((states.sensor.vonneumann_sensor.attributes["print_stats"]["print_duration"]/states.sensor.vonneumann_sensor.attributes["display_status"]["progress"]- states.sensor.vonneumann_sensor.attributes["print_stats"]["print_duration"]) if states.sensor.vonneumann_sensor.attributes["display_status"]["progress"]>0 else 0)) | timestamp_custom("%H:%M:%S", 0)}}'
+      icon_template: mdi:av-timer
+    vonneumann_nozzletemp:
+      friendly_name: 'Nozzle Temperature'
+      value_template: '{{[( states.sensor.vonneumann_sensor.attributes["extruder"]["temperature"]  | float | round(1)| string)," / ",( states.sensor.vonneumann_sensor.attributes["extruder"]["target"]  | float | round(1)| string)]|join}}'
+      icon_template: mdi:thermometer
+    vonneumann_bedtemp:
+      friendly_name: 'Bed Temperature'
+      value_template: '{{[( states.sensor.vonneumann_sensor.attributes["heater_bed"]["temperature"]  | float | round(1)| string)," / ",( states.sensor.vonneumann_sensor.attributes["heater_bed"]["target"]  | float | round(1)| string)]|join}}'
+      icon_template: mdi:thermometer
+
+- platform: rest
+  scan_interval: 15
+  name: klipper_preview_path
+  resource_template: "http://192.168.1.183:7125/server/files/metadata?filename={{ states(('sensor.vonneumann_current_print')) }}"
+  json_attributes_path: "$.result.thumbnails.[1]"
+  json_attributes:
+    - data
+    - width
+    - height
+    - size
+  value_template: 'OK'

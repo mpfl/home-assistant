@@ -1,0 +1,6 @@
+alias: "Enact mode: Climate automatic"
+sequence:
+- service: automation.turn_on
+  entity_id: automation.turn_hvac_on
+- service: automation.turn_on
+  entity_id: automation.turn_hvac_off

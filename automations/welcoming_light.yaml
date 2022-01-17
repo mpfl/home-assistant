@@ -1,0 +1,15 @@
+- id: welcoming_light
+  alias: "Welcoming light"
+  trigger:
+  - entity_id: device_tracker.mpfl
+    event: enter
+    platform: zone
+    zone: zone.home
+
+  action:
+  - data:
+      entity_id: light.barsony_lamp
+    service: light.turn_on
+  - data:
+      entity_id: light.front_porch
+    service: light.turn_on

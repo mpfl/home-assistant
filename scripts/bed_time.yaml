@@ -1,0 +1,12 @@
+# Turn all non-bedroom lights and the home theatre off
+
+alias: Bed Time 
+sequence:
+# Turn on bedroom mood light
+  - service: light.turn_on
+    entity_id: light.bedroom_mood_lamp
+# Turn on bedside
+  - service: switch.turn_on
+    entity_id: switch.bedside
+# Turn everything off
+  - service: script.all_off

@@ -1,0 +1,14 @@
+# iOS push notificiations
+
+push:
+  categories:
+    - name: "Bed Time"
+      identifier: "bed_time"
+      actions:
+        - identifier: "GOODNIGHT"
+          title: "Goodnight"
+          activationMode: "background"
+          authenticationRequired: false
+          destructive: false
+          behavior: "default"
+

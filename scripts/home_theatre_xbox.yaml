@@ -1,0 +1,6 @@
+alias: XBox 360
+sequence:
+- service: remote.turn_on
+  entity_id: remote.home_theatre
+  data:
+    activity: '28578442'

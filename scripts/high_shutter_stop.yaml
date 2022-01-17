@@ -1,0 +1,6 @@
+alias: "High shutter stop"
+sequence:
+- service: remote.send_command
+  data:
+    entity_id: remote.bedroom
+    command: !secret high_shutter_stop 

@@ -1,0 +1,6 @@
+- platform: statistics
+  entity_id: sensor.available_power
+  name: "Mean available power"
+  max_age:
+    minutes: 1
+  precision: 0

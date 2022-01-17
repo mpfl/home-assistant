@@ -1,0 +1,40 @@
+resources:
+  - url: /local/power-wheel-card.js?v=1
+    type: module
+
+title: Coode Street
+
+views:
+  - title: Example
+    id: dashboard
+    cards:
+      - id: power
+        type: entities
+        entities:
+          - switch.home_theatre
+          - light.tv_lamp
+          - switch.bedside
+          - light.bedroom_mood_light
+
+      - id: powerwheel
+        title: "Power"
+        type: "custom:power-wheel-card"
+        solar_power_entity: sensor.solar_generation
+        grid_power_entity: sensor.power_use
+
+      - id: kitchentemp
+        name: 'Inside Temperature'
+        type: sensor
+        entity: sensor.sensebender_micro_8_1
+        graph: line
+
+      - id: outsidetemp
+        name: 'Outside Temperature'
+        type: sensor
+        entity: sensor.pws_temp_c
+        graph: line
+
+      - id: forecast
+        name: 'Weather Forecast'
+        type: weather-forecast
+        entity: weather.perth_weather

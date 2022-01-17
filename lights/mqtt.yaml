@@ -1,0 +1,11 @@
+# Dashboard backlights
+- platform: mqtt
+  name: "Juniper dashboard"
+  command_topic: "dashboard/juniper/power/set"
+  state_topic: "dashboard/juniper/power/status"
+  brightness_command_topic: "dashboard/juniper/brightness/set"
+  brightness_state_topic: "dashboard/juniper/brightness/status"
+  availability_topic: "dashboard/juniper/availability"
+  payload_on: "0"
+  payload_off: "1"
+  qos: 2

@@ -1,0 +1,21 @@
+# Power readings from emonPi
+- platform: mqtt
+  state_topic: "emon/emonpi/power1"
+  name: "Power Use"
+  device_class: "power"
+  unit_of_measurement: "W"
+  state_class: "measurement"
+
+- platform: mqtt
+  state_topic: "emon/emonpi/power2"
+  name: "Solar Generation"
+  device_class: "power"
+  unit_of_measurement: "W"
+  state_class: "measurement"
+
+# Sensor for monitoring the zigbee2mqtt bridge state
+- platform: mqtt
+  name: Zigbee2mqtt Bridge state
+  state_topic: "zigbee2mqtt/bridge/state"
+  icon: mdi:router-wireless
+

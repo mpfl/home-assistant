@@ -1,0 +1,383 @@
+- id: '1509175854031'
+  alias: Welcoming light
+  trigger:
+  - entity_id: device_tracker.mpfl_sumac
+    event: enter
+    platform: zone
+    zone: zone.home
+  condition:
+  - after: sunset
+    after_offset: '0:30:00'
+    condition: sun
+  action:
+  - data:
+      entity_id: light.0x8418260000018d81_light
+    service: light.turn_on
+  - data:
+      entity_id: light.0x8418260000cbac10_light
+    service: light.turn_on
+
+# Button automations
+
+- id: xiaomi_button_click
+  alias: "Xiaomi Button Single Click"
+  trigger:
+    platform: state
+    entity_id: sensor.0x00158d00023e651f_click
+    to: 'single'
+
+  action:
+    - service: light.toggle
+      data:
+        entity_id: light.0x0017880104eacf77_light
+
+- id: xiaomi_button_click
+  alias: "Xiaomi Button Double Click"
+  trigger:
+    platform: state
+    entity_id: sensor.0x00158d00023e651f_click
+    to: 'double'
+
+  action:
+    - service: switch.toggle
+      data:
+        entity_id: switch.bedside
+
+# Occupancy automations
+
+- id: hallway_light
+  alias: "Turn on hallway light when motion is detected"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.0x00178801032a8357_occupancy
+    to: "on"
+
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.0x00178801041878c2_light
+
+- id: hallway_light
+  alias: "Turn off hallway light when it's clear"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.0x00178801032a8357_occupancy
+    to: "off"
+
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.0x00178801041878c2_light
+
+# Mode automations
+
+- id: enable_away_mode
+  alias: "Enable away mode based on alarm panel"
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.alarm_panel
+    from: 'disarmed'
+    to: 'armed_away'
+
+  condition:
+    - condition: state
+      entity_id: input_boolean.mode_away
+      state: 'off'
+ 
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.mode_away
+
+- id: disable_away_mode
+  alias: "Disable away mode based on alarm panel"
+  trigger:
+    platform: state
+    entity_id: alarm_control_panel.alarm_panel
+    from: 'armed_away'
+    to: 'disarmed'
+
+  condition:
+    - condition: state
+      entity_id: input_boolean.mode_away
+      state: 'on'
+
+  action:
+    - service: input_boolean.turn_off
+      data: 
+        entity_id: input_boolean.mode_away
+
+# Away mode
+
+- id: turn_on_away_mode
+  alias: 'Turn on away mode'
+  trigger:
+    - platform: state
+      entity_id: input_boolean.mode_away
+      from: 'off'
+      to: 'on'
+
+  action:
+    service: scene.turn_on
+    entity_id: scene.away
+
+- id: turn_off_away_mode
+  alias: 'Turn off away mode'
+  trigger:
+    - platform: state
+      entity_id: input_boolean.mode_away
+      from: 'on'
+      to: 'off'
+
+  action:
+    service: scene.turn_on
+    entity_id: scene.home
+
+# Climate control - on/off/automatic
+
+- id: set_climate_override_on
+  alias: 'Override climate on'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "On"
+  action:
+    service: script.enact_mode_climate_on
+
+- id: set_climate_override__off
+  alias: 'Override climate off'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "Off"
+  action:
+    service: script.enact_mode_climate_off
+
+- id: set_climate_automatic
+  alias: 'Enable automatic climate'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "Automatic"
+  action:
+    service: script.enact_mode_climate_automatic
+
+# Automated HVAC for climate control
+
+- id: turn_on_heating
+  alias: 'Turn air conditioner on to heat'
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.home_climate
+      to: 'Cold'
+
+    - platform: state
+      entity_id: sensor.outside_climate
+      to: 'Cold'
+
+    - platform: state
+      entity_id: binary_sensor.spare_power
+      from: 'off'
+      to: 'on'
+
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.hvac_safety
+
+  condition:
+    - condition: state
+      entity_id: binary_sensor.spare_power
+      state: 'on'
+    - condition: state
+      entity_id: sensor.home_climate
+      state: 'Cold'
+    - condition: state
+      entity_id: sensor.outside_climate
+      state: 'Cold'
+    - condition: state
+      entity_id: input_select.climate_control
+      state: 'Automatic'
+    - condition: state
+      entity_id: timer.hvac_safety
+      state: 'idle'
+    - condition: state
+      entity_id: sensor.hvac_state
+      state: 'True'
+
+  action:
+    service: script.enact_hvac_heating
+
+- id: turn_off_ac
+  alias: 'Turn off air conditioning'
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.home_climate
+      to: 'Comfy'
+
+    - platform: state
+      entity_id: binary_sensor.spare_power
+      from: 'on'
+      to: 'off'
+
+  condition:
+    condition: and
+    conditions:  
+      - condition: state
+        entity_id: sensor.hvac_state
+        state: 'False'
+      - condition: state
+        entity_id: timer.hvac_safety
+        state: 'idle'
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.spare_power
+            state: 'off'
+          - condition: state
+            entity_id: sensor.home_climate
+            state: 'Comfy'
+          - condition: state
+            entity_id: sensor.outside_climate
+            state: 'Comfy'
+
+  action:
+    service: script.enact_hvac_inactive
+
+- id: turn_off_ac_timer
+  alias: 'Check if aircon should be off at end of timer'
+  initial_state: false
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.hvac_safety
+
+  condition:
+    condition: and
+    conditions:  
+      - condition: state
+        entity_id: sensor.hvac_state
+        state: 'False'
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.spare_power
+            state: 'off'
+          - condition: state
+            entity_id: sensor.home_climate
+            state: 'Comfy'
+          - condition: state
+            entity_id: sensor.outside_climate
+            state: 'Comfy'
+
+  action:
+    service: script.enact_hvac_inactive
+
+# Sun-related automations
+
+- id: set_daytime_lighting
+  alias: 'Set lighting for daytime'
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    above: 3.5
+  action:
+    service: scene.turn_on
+    entity_id: scene.day
+
+- id: set_dusk_lighting
+  alias: 'Set lighting for dusk'
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: 3.5
+  action:
+    service: scene.turn_on
+    entity_id: scene.dusk
+
+- id: set_night_lighting
+  alias: 'Set lighting for night'
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    below: -12
+  action:
+    service: scene.turn_on
+    entity_id: scene.night
+
+# zigbee2mqtt Automations
+- alias: Zigbee2mqtt Log Level
+  initial_state: 'on'
+  trigger:
+    - platform: state
+      entity_id: input_select.zigbee2mqtt_log_level
+      to: debug
+    - platform: state
+      entity_id: input_select.zigbee2mqtt_log_level
+      to: warn
+    - platform: state
+      entity_id: input_select.zigbee2mqtt_log_level
+      to: error
+    - platform: state
+      entity_id: input_select.zigbee2mqtt_log_level
+      to: info
+  action:
+    - service: mqtt.publish
+      data:
+        payload_template: '{{ states(''input_select.zigbee2mqtt_log_level'') }}'
+        topic: zigbee2mqtt/bridge/config/log_level
+
+- id: enable_zigbee_join
+  alias: Enable Zigbee joining
+  hide_entity: true
+  trigger:
+    platform: state
+    entity_id: input_boolean.zigbee_permit_join
+    to: 'on'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: zigbee2mqtt/bridge/config/permit_join
+      payload: 'true'
+  - service: timer.start
+    data:
+      entity_id: timer.zigbee_permit_join
+
+- id: disable_zigbee_join
+  alias: Disable Zigbee joining
+  hide_entity: true
+  trigger:
+  - entity_id: input_boolean.zigbee_permit_join
+    platform: state
+    to: 'off'
+  action:
+  - data:
+      payload: 'false'
+      topic: zigbee2mqtt/bridge/config/permit_join
+    service: mqtt.publish
+  - data:
+      entity_id: timer.zigbee_permit_join
+    service: timer.cancel
+
+- id: disable_zigbee_join_timer
+  alias: Disable Zigbee joining by timer
+  hide_entity: true
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.zigbee_permit_join
+  action:
+  - service: mqtt.publish
+    data:
+      topic: zigbee2mqtt/bridge/config/permit_join
+      payload: 'false'
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.zigbee_permit_join

@@ -1,0 +1,15 @@
+alias: "Doorbell pressed"
+sequence:
+- service: camera.snapshot
+  data:
+    entity_id: camera.front_door
+    filename: "/config/tmp/doorbell_snapshot.jpg"
+- delay: "00:00:01"
+- service: notify.mpfl
+  data:
+    title: "Coode Street"
+    message: "Ding dong!"
+    data:
+      sound: bugle
+      # url: "https://ha.matthias.haus/"
+      attachment: "/config/tmp/doorbell_snapshot.jpg"

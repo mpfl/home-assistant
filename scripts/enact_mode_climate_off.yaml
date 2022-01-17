@@ -1,0 +1,8 @@
+alias: "Enact mode: Climate override off"
+sequence:
+- service: automation.turn_off
+  entity_id: automation.turn_hvac_on
+- service: automation.turn_off
+  entity_id: automation.turn_hvac_off
+- service: script.enact_hvac_off
+

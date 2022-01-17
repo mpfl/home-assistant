@@ -1,0 +1,15 @@
+alias: "person detect at front_door"
+sequence:
+- service: camera.snapshot
+  data:
+    entity_id: camera.front_door_person
+    filename: "/config/tmp/front_door_snapshot.jpg"
+- delay:
+    milliseconds: 200
+- service: notify.mpfl
+  data:
+    title: "Front door"
+    message: "Someone's at the door"
+    data:
+      sound: bugle
+      attachment: "/config/tmp/front_door_snapshot.jpg"

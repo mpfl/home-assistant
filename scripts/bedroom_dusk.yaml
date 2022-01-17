@@ -1,0 +1,14 @@
+alias: "Scene: Bedroom dusk"
+sequence:
+- service: cover.close_cover
+  data:
+    entity_id: cover.corner_window
+- service: cover.close_cover
+  data:
+    entity_id: cover.high_window
+- service: light.turn_on
+  data:
+    entity_id: light.bedroom_mood_lamp
+    brightness: 200
+    color_temp: 153
+    transition: 60

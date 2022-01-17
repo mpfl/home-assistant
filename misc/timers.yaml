@@ -1,0 +1,11 @@
+zigbee_permit_join:
+  name: Time remaining
+  duration: 120
+
+# HVAC safety margin - how long the HVAC must stay ON or OFF for
+
+hvac_safety:
+  name: HVAC safety margin
+  duration: "00:30:00"
+  icon: mdi:thermostat
+

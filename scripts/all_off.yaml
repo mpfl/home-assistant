@@ -1,0 +1,19 @@
+# Turn all non-bedroom lights and the home theatre off
+
+alias: All Off
+sequence:
+# Front door
+  - service: light.turn_off
+    entity_id: light.front_porch
+# Back door
+  - service: light.turn_off
+    entity_id: light.back_porch
+# Barsony
+  - service: light.turn_off
+    entity_id: light.barsony_lamp
+# TV lamp
+  - service: light.turn_off
+    entity_id: light.tv_lamp_2
+# Home theatre
+  - service: media_player.turn_off
+    entity_id: media_player.home_theatre_tv

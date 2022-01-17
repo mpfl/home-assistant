@@ -1,0 +1,15 @@
+alias: "Printer status"
+description: "Send a printer status notification"
+fields:
+  printer:
+    description: "The name of the printer"
+    example: "Von Neumann"
+  status:
+    description: "The status of the printer"
+    example: "complete"
+sequence:
+  - service: notify.mobile_app_sumac
+    data:
+      title: "Printer status"
+      message: "{{ printer }} is now {{ status }}"
+

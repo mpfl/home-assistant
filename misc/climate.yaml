@@ -1,0 +1,15 @@
+# Climate
+
+- platform: smartir
+  name: Bedroom AC
+  unique_id: bedroom_ac
+  device_code: 1683
+  controller_data: remote.bedroom 
+
+- platform: smartir
+  name: Living AC
+  unique_id: living_ac
+  device_code: 1023
+  controller_data: remote.kitchen
+  temperature_sensor: sensor.sensebender_micro_8_1
+  humidity_sensor: sensor.sensebender_micro_8_2

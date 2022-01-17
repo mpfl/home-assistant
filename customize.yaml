@@ -1,0 +1,84 @@
+device_tracker.mpfl:
+  entity_picture: https://www.gravatar.com/avatar/48db409208c43f88e4f5f4e8830d2dc9.jpg?s=80&d=wavatar
+sensor.power_use:
+  entity_picture: https://raw.githubusercontent.com/emoncms/emoncms/master/Theme/basic/favicon.png
+  friendly_name: Power Import/Export
+sensor.solar_generation:
+  icon: mdi:weather-sunny
+sensor.light_sensor_3_0:
+  friendly_name: Light level
+sensor.temperatureandhumidity_1_0:
+  friendly_name: HumidityDHT22
+sensor.temperatureandhumidity_1_1:
+  friendly_name: TemperatureDHT22
+sensor.bom_perth_air_temp_c:
+  friendly_name: Temperature
+sensor.bom_perth_feels_like_c:
+  friendly_name: Feels like
+sensor.bom_perth_relative_humidity:
+  friendly_name: Humidity
+light.barsony:
+  icon: mdi:lamp
+light.tv_lamp:
+  icon: mdi:lamp
+switch.home_theatre:
+  icon: mdi:television
+light.front_porch:
+  icon: mdi:spotlight-beam
+light.back_porch:
+  icon: mdi:spotlight-beam
+scene.sonos:
+  icon: mdi:music
+script.all_off:
+  icon: mdi:flash-off
+scene.roku:
+  icon: mdi:television-guide
+scene.xbox_360:
+  icon: mdi:xbox
+scene.shield:
+  icon: mdi:television-guide
+light.juniper_dashboard:
+  icon: mdi:television
+sensor.sensebender_micro_8_1:
+  friendly_name: Temperature
+sensor.sensebender_micro_8_2:
+  friendly_name: Humidity
+sensor.sensebender_micro_7_1:
+  friendly_name: Temperature
+sensor.sensebender_micro_7_2:
+  friendly_name: Humidity
+sensor.sensebender_micro_4_1:
+  friendly_name: Temperature
+sensor.sensebender_micro_4_2:
+  friendly_name: Humidity
+sensor.sensebender_micro_5_1:
+  friendly_name: Temperature
+sensor.sensebender_micro_5_2:
+  friendly_name: Humidity
+sensor.sensebender_micro_6_1:
+  friendly_name: Temperature
+sensor.sensebender_micro_6_2:
+  friendly_name: Humidity
+switch.sonoff_basic_1:
+  friendly_name: Cocoon Create Model Maker
+light.patio_overhead:
+  icon: mdi:ceiling-light
+switch.transmission:
+  icon: mdi:pause
+light.0x0017880104eacf77_light:
+  friendly_name: Bedroom Mood Light
+  icon: mdi:alarm-light
+light.0x8418260000018a1c_light:
+  friendly_name: Back Porch
+  icon: mdi:spotlight-beam
+light.0x8418260000cbac10_light:
+  icon: mdi:lamp
+light.0x8418260000cb0706_light:
+  icon: mdi:lamp
+light.0x8418260000018d81_light:
+  icon: mdi:spotlight-beam
+sensor.0x00158d00023e651f_click:
+  friendly_name: Bedhead Button
+  icon: mdi:gesture-double-tap
+light.0xccccccfffe363d41_light:
+  icon: mdi:spotlight

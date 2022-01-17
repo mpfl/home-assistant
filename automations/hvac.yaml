@@ -1,0 +1,143 @@
+- id: turn_on_heating
+  alias: 'Turn HVAC on'
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.home_climate
+      to: 'Cold'
+
+    - platform: state
+      entity_id: sensor.home_climate
+      to: 'Hot'
+
+    - platform: state
+      entity_id: sensor.outside_climate
+      to: 'Cold'
+
+    - platform: state
+      entity_id: sensor.outside_climate
+      to: 'Hot'
+
+    - platform: state
+      entity_id: binary_sensor.spare_power
+      to: 'on'
+
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.hvac_safety
+
+  condition:
+    - condition: state
+      entity_id: binary_sensor.spare_power
+      state: 'on'
+
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: sensor.home_climate
+        state: 'Cold'
+      - condition: state
+        entity_id: sensor.home_climate
+        state: 'Hot'
+
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: sensor.away_mode
+        state: 'True'
+      - condition: or
+        conditions:
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: sensor.outside_climate
+            state: 'Cold'
+          - condition: state
+            entity_id: sensor.home_climate
+            state: 'Cold'
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: sensor.outside_climate
+            state: 'Hot'
+          - condition: state
+            entity_id: sensor.home_climate
+            state: 'Hot'
+
+    - condition: state
+      entity_id: input_select.climate_control
+      state: 'Automatic'
+
+    - condition: state
+      entity_id: timer.hvac_safety
+      state: 'idle'
+
+    - condition: state
+      entity_id: sensor.hvac_state
+      state: 'True'
+
+  action:
+    service: script.enact_hvac_on
+
+- id: turn_off_ac
+  alias: 'Turn HVAC off'
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: sensor.home_climate
+      to: 'Comfy'
+      
+    - platform: state
+      entity_id: sensor.outside_climate
+      to: 'Comfy'
+
+    - platform: state
+      entity_id: binary_sensor.spare_power
+      to: 'off'
+
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.hvac_safety
+
+  condition:
+    - condition: state
+      entity_id: sensor.hvac_state
+      state: 'False'
+    - condition: state
+      entity_id: timer.hvac_safety
+      state: 'idle'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.spare_power
+          state: 'off'
+        - condition: state
+          entity_id: sensor.home_climate
+          state: 'Comfy'
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: sensor.outside_climate
+            state: 'Comfy'
+          - condition: state
+            entity_id: sensor.away_mode
+            state: 'False'
+
+  action:
+    service: script.enact_hvac_off
+
+- id: adjust_hvac_temperature
+  alias: 'Adjust HVAC temperature for away mode'
+  trigger:
+    - platform: state
+      entity_id: sensor.away_mode
+
+  condition:
+    - condition: state
+      entity_id: sensor.hvac_state
+      state: 'False'
+
+  action:
+    service: script.enact_hvac_on

@@ -1,0 +1,128 @@
+all_off:
+  alias: All Off
+  sequence:
+  - service: homeassistant.turn_off
+    entity_id: group.all_lights
+  - service: homeassistant.turn_off
+    entity_id: switch.home_theatre
+
+home_theatre_sonos:
+  alias: Sonos
+  sequence:
+  - service: remote.turn_on
+    entity_id: remote.home_theatre
+    data:
+      activity: '28578588'
+home_theatre_xbox:
+  alias: XBox 360
+  sequence:
+  - service: remote.turn_on
+    entity_id: remote.home_theatre
+    data:
+      activity: '28578442'
+home_theatre_roku:
+  alias: Roku
+  sequence:
+  - service: remote.turn_on
+    entity_id: remote.home_theatre
+    data:
+      activity: '28578483'
+
+# Climate control scripts
+
+start_hvac_timer:
+  alias: Start HVAC timer
+  sequence:
+  - service: timer.start
+    entity_id: timer.hvac_safety
+
+# House mode scripts
+
+enact_mode_away:
+  alias: "Enact mode: Away"
+  sequence:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.cold_threshold
+      value: 20
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.hot_threshold
+      value: 26
+
+enact_mode_home:
+  alias: "Enact mode: Home"
+  sequence:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.cold_threshold
+      value: 22
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.hot_threshold
+      value: 24
+
+enact_hvac_cooling:
+  alias: "Enact: HVAC cooling"
+  sequence:
+  - service: climate.set_temperature
+    data_template:
+      temperature: "{{ states('sensor.hot_threshold') | int }}"
+  - service: climate.set_operation_mode
+    data:
+      operation_mode: "cool"
+  - service: climate.turn_on
+  - service: timer.start
+    entity_id: timer.hvac_safety
+
+enact_hvac_heating:
+  alias: "Enact: HVAC heating"
+  sequence:
+  - service: climate.set_temperature
+    data_template:
+      temperature: "{{ states('sensor.cold_threshold') | int }}"
+  - service: climate.set_operation_mode
+    data: 
+      operation_mode: "heat" 
+  - service: climate.turn_on
+  - service: timer.start
+    entity_id: timer.hvac_safety
+
+enact_hvac_inactive:
+  alias: "Enact: HVAC inactive"
+  sequence:
+  - service: climate.turn_off
+  - service: timer.start
+    entity_id: timer.hvac_safety
+
+enact_mode_climate_on:
+  alias: "Enact mode: Climate override on"
+  sequence:
+  - service: automation.turn_off
+    entity_id: automation.turn_air_conditioner_on_to_heat
+  - service: automation.turn_off
+    entity_id: automation.turn_off_air_conditioning
+  - service: automation.turn_off
+    entity_id: automation.check_if_aircon_should_be_off_at_end_of_timer
+  - service: script.enact_hvac_heating
+
+enact_mode_climate_off:
+  alias: "Enact mode: Climate override off"
+  sequence:
+  - service: automation.turn_off
+    entity_id: automation.turn_air_conditioner_on_to_heat
+  - service: automation.turn_off
+    entity_id: automation.turn_off_air_conditioning
+  - service: automation.turn_off
+    entity_id: automation.check_if_aircon_should_be_off_at_end_of_timer
+  - service: script.enact_hvac_inactive
+
+enact_mode_climate_automatic:
+  alias: "Enact mode: Climate automatic"
+  sequence:
+  - service: automation.turn_on
+    entity_id: automation.turn_air_conditioner_on_to_heat
+  - service: automation.turn_on
+    entity_id: automation.turn_off_air_conditioning
+  - service: automation.turn_on
+    entity_id: automation.check_if_aircon_should_be_off_at_end_of_timer

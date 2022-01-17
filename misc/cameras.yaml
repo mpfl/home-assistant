@@ -1,0 +1,16 @@
+# Cameras
+
+# - platform: bom
+#  name: Rain radar
+#  location: !secret home_city
+
+#- platform: mjpeg
+#  name: Front Door
+#  mjpeg_url: http://motioneye.matthias.haus:8081
+#  still_image_url: http://motioneye.matthias.haus:8765/cams/picture/2/current/?_username=admin&_signature=55201f6b6fcd15dc9a8a2a000e6edd06af4ac940
+
+#- platform: mjpeg
+#  name: Salon
+#  mjpeg_url: http://motioneye.matthias.haus:8082
+#  still_image_url: http://motioneye.matthias.haus:8765/cams/picture/1/current/?_username=admin&_signature=91a08e40cb6d55e8914af8be3abceb6385d977a6
+

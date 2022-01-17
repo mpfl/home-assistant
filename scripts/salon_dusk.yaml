@@ -1,0 +1,11 @@
+alias: "Scene: Salon dusk"
+sequence:
+- service: cover.close_cover
+  data:
+    entity_id: cover.big_window
+- service: light.turn_on
+  data:
+    entity_id: light.barsony_lamp
+    brightness: 200 
+    color_temp: 153
+    transition: 60

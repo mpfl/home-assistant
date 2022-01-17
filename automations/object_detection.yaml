@@ -1,0 +1,13 @@
+# Object detection
+#
+
+- alias: "Someone's at the door"
+  id: front_door_person
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.front_door_person_motion
+      from: "off"
+      to: "on"
+  action:
+    - service: script.front_door_person

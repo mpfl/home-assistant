@@ -1,0 +1,10 @@
+#Broadlink switches
+
+- platform: broadlink
+  host: !secret broadlink_bedroom_host
+  mac: !secret broadlink_bedroom_mac
+
+- platform: broadlink
+  host: !secret broadlink_living_host
+  mac: !secret broadlink_living_mac
+

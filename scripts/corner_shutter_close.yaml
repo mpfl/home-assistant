@@ -1,0 +1,6 @@
+alias: "Corner shutter close"
+sequence:
+- service: remote.send_command
+  data:
+    entity_id: remote.bedroom
+    command: !secret corner_shutter_close 

@@ -1,0 +1,22 @@
+# Input selects
+
+zigbee2mqtt_log_level:
+  name: Zigbee2mqtt Log Level
+  options:
+    - debug
+    - info
+    - warn
+    - error
+  initial: info
+  icon: mdi:format-list-bulleted
+
+# Whether climate control is off, automatic or on
+
+climate_control:
+  name: Climate control
+  options:
+    - "Off"
+    - "Automatic"
+    - "On"
+  initial: "Off"
+  icon: mdi:home-heart

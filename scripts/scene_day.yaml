@@ -1,0 +1,6 @@
+alias: "Scene: Daytime"
+sequence:
+- service: light.turn_on
+  data:
+    entity_id: light.juniper_dashboard
+    brightness: 255

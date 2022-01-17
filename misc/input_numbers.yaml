@@ -1,0 +1,18 @@
+# Input numbers
+
+# Set point offset for living room HVAC
+# This offset will be applied HVAC set points in relation to the heating/cooling thresholds
+
+hvac_living_offset:
+  name: HVAC Living offset
+  min: -5
+  max: 5
+  step: 1
+  initial: 0
+  
+hvac_bedroom_offset:
+  name: HVAC Bedroom offset
+  min: -5
+  max: 5
+  step: 1
+  initial: 0

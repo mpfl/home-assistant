@@ -1,0 +1,5 @@
+alias: Start HVAC timer
+sequence:
+- service: timer.start
+  entity_id: timer.hvac_safety
+

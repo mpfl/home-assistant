@@ -1,0 +1,29 @@
+# Climate control - on/off/automatic
+
+- id: set_climate_override_on
+  alias: 'Override climate on'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "On"
+  action:
+    service: script.enact_mode_climate_on
+
+- id: set_climate_override__off
+  alias: 'Override climate off'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "Off"
+  action:
+    service: script.enact_mode_climate_off
+
+- id: set_climate_automatic
+  alias: 'Enable automatic climate'
+  trigger:
+    platform: state
+    entity_id: input_select.climate_control
+    to: "Automatic"
+  action:
+    service: script.enact_mode_climate_automatic
+

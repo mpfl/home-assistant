@@ -1,0 +1,31 @@
+- alias: Bed time
+  id: bed_time
+  trigger:
+    - platform: state
+      entity_id: media_player.home_theatre_tv
+      to: "off"
+
+  condition:
+    - condition: state
+      entity_id: sensor.time_of_day
+      state: "Night"
+
+  action:
+    service: notify.mobile_app_sumac
+    data:
+      title: "Bed time"
+      message: "Sun's getting real low"
+      data:
+        push:
+          category: "bed_time"
+
+- alias: Bed time all off
+  id: bed_time_all_off
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: GOODNIGHT
+  action:
+    - service: script.bed_time
+

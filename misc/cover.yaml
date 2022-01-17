@@ -1,0 +1,31 @@
+- platform: template
+  covers:
+    high_window:
+      device_class: shutter
+      friendly_name: "High window shutter"
+      open_cover:
+        service: script.high_shutter_open
+      close_cover:
+        service: script.high_shutter_close
+      stop_cover:
+        service: script.high_shutter_stop
+
+    corner_window:
+      device_class: shutter
+      friendly_name: "Corner window shutter"
+      open_cover:
+        service: script.corner_shutter_open
+      close_cover:
+        service: script.corner_shutter_close
+      stop_cover:
+        service: script.corner_shutter_stop
+
+    big_window:
+      device_class: shutter
+      friendly_name: "Big window shutter"
+      open_cover:
+        service: script.big_shutter_open
+      close_cover:
+        service: script.big_shutter_close
+      stop_cover:
+        service: script.big_shutter_stop

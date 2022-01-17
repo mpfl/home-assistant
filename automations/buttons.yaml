@@ -1,0 +1,75 @@
+- id: bedhead_button_single_click
+  alias: "Bedhead button single click"
+  trigger:
+    platform: state
+    entity_id: sensor.bed_head_button_action
+    to: 'single'
+
+  action:
+    - service: light.toggle
+      data:
+        entity_id: light.bedroom_mood_lamp
+
+- id: bedhead_button_double_click
+  alias: "Bedhead button double click"
+  trigger:
+    platform: state
+    entity_id: sensor.bed_head_button_action
+    to: 'double'
+
+  action:
+    - service: switch.toggle
+      data:
+        entity_id: switch.bedside
+
+- id: bedhead_button_quadruple_click
+  alias: "Bedhead button quadruple click"
+  trigger:
+    platform: state
+    entity_id: sensor.bed_head_button_action
+    to: 'quadruple'
+
+  action:
+    - service: script.all_off
+
+- id: dashboard_button_single_click_on
+  alias: "Dashboard button single click"
+  trigger:
+    platform: state
+    entity_id: sensor.dashboard_button_action
+    to: "single"
+  
+  action:
+   - service: script.dashboard_on
+
+- id: dashboard_button_double_click
+  trigger:
+    platform: state
+    entity_id: sensor.dashboard_button_action
+    to: "double"
+
+  action:
+    - service: script.dashboard_off
+
+- id: doorbell_button_any_click
+  alias: "Doorbell button any click"
+  trigger:
+    - platform: state
+      entity_id: sensor.doorbell_button_action
+      to: "single"
+
+    - platform: state
+      entity_id: sensor.doorbell_button_action
+      to: "double"
+
+    - platform: state
+      entity_id: sensor.doorbell_button_action
+      to: "triple"
+
+    - platform: state
+      entity_id: sensor.doorbell_button_action
+      to: "quadruple"
+
+  action:
+   - service: script.doorbell_pressed
+

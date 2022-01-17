@@ -1,0 +1,46 @@
+alias: "Enact: HVAC on"
+sequence:
+- service: climate.set_temperature
+  data_template:
+    temperature: >
+      {% if states('sensor.home_climate') == 'Cold' %}
+        {{ (states('sensor.cold_threshold') | int) + (states('input_number.hvac_living_offset') | int) }}
+      {% elif states('sensor.home_climate') == 'Hot' %}
+        {{ (states('sensor.hot_threshold') | int) + (states('input_number.hvac_living_offset') | int) }}
+      {% else %}
+        23
+      {% endif %}
+    entity_id: climate.living_ac
+- service: climate.set_temperature
+  data_template:
+    temperature: >
+      {% if states('sensor.home_climate') == 'Cold' %}
+        {{ (states('sensor.cold_threshold') | int) + (states('input_number.hvac_bedroom_offset') | int) }}
+      {% elif states('sensor.home_climate') == 'Hot' %}
+        {{ (states('sensor.hot_threshold') | int) + (states('input_number.hvac_bedroom_offset') | int) }}
+      {% else %}
+        23
+      {% endif %}
+    entity_id: climate.bedroom_ac
+- service: climate.set_hvac_mode
+  data_template:
+    hvac_mode: >
+      {% if states('sensor.home_climate') == 'Cold' %}
+        heat
+      {% elif states('sensor.home_climate') == 'Hot' %}
+        cool
+      {% else %}
+        fan_only
+      {% endif %}
+  entity_id: all
+- service_template: >
+    {% if states('sensor.home_climate') == 'Cold' %}
+      climate.turn_on
+    {% elif states('sensor.home_climate') == 'Hot' %}
+      climate.turn_on
+    {% else %}
+      climate.turn_off
+    {% endif %}
+  entity_id: all
+- service: timer.start
+  entity_id: timer.hvac_safety
